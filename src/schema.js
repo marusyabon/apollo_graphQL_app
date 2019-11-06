@@ -26,8 +26,9 @@ const typeDefs = gql`
 
 	type Mutation {
 		createUser(email: String, name: String, password: String): User
-		createCar(model: String, userId: String): Car
 		updateLocation(_id: ID,type: String, coordinates: [Int]): Car
+		createCar(model: String, userId: String): Car
+		updateCar(_id: String, model: String, userId: String): Car
 	}
 `;
 

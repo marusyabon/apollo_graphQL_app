@@ -1,13 +1,17 @@
-const {createUser, createCar} = require('./mutations/user_invoked');
-const {updateLocation} = require('./mutations/car_invoked');
+const {createUser} = require('./mutations/users');
+const {createCar, updateCar} = require('./mutations/cars');
+const {updateLocation} = require('./mutations/location');
 
 module.exports = {
 	Mutation: {
-		//users invoked
+		//users
 		createUser: createUser,
 		createCar: createCar,
 
-		//car invoked
-		updateLocation: updateLocation
+		//cars
+		updateCar: updateCar,
+
+		//lcation
+		updateLocation: updateLocation		
 	}
 };

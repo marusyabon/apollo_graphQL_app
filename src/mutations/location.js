@@ -10,9 +10,11 @@ async function updateLocation (_, args, req) {
                 type: args.type,
                 coordinates: args.coordinates
             }
-        } }
+        } }, 
+        {
+            new: true
+        }
     )
-
     return { ...updatedCar._doc, _id: updatedCar._id.toString() };
 }
 
