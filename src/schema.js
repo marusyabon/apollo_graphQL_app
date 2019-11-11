@@ -1,6 +1,10 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
+	type Subscription {
+		locationChanged: Location
+	}
+
 	type Location {
 		type: String
 		coordinates: [Int]
@@ -29,6 +33,7 @@ const typeDefs = gql`
 		updateLocation(_id: ID,type: String, coordinates: [Int]): Car
 		createCar(model: String, userId: String): Car
 		updateCar(_id: String, model: String, userId: String): Car
+		setNewLocation(_id: ID,type: String, coordinates: [Int]): Location
 	}
 `;
 
