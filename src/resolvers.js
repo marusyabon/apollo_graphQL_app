@@ -1,6 +1,6 @@
 const {createUser} = require('./mutations/users');
 const {createCar, updateCar} = require('./mutations/cars');
-const {updateLocation, setNewLocation, locationChanged} = require('./mutations/location');
+const {updateLocation, locationChanged} = require('./mutations/location');
 
 module.exports = {
 	Subscription: {
@@ -19,6 +19,5 @@ module.exports = {
 
 		//location
 		updateLocation: updateLocation,
-		setNewLocation: setNewLocation
 	}
 }

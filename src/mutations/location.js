@@ -3,15 +3,18 @@ const ObjectID = require('mongodb').ObjectID;
 const {PubSub} = require('apollo-server');
 const pubsub = new PubSub();
 const LOCATION_CHANGED = 'LOCATION_CHANGED';
+const DEFAULT_LOCATION_TYPE = 'point';
 
-async function updateLocation (_, args, req) {
+async function updateLocation (_, args) {
+    pubsub.publish(LOCATION_CHANGED, {locationChanged: args });
+console.log(args)
     const updatedCar = await Car.findOneAndUpdate(
         { _id: ObjectID(args._id) },
         { $set: { 
             location: 
             {
-                type: args.type,
-                coordinates: args.coordinates
+                type: args.location.type || DEFAULT_LOCATION_TYPE,
+                coordinates: args.location.coordinates
             }
         } }, 
         {
@@ -22,13 +25,7 @@ async function updateLocation (_, args, req) {
 }
 
 function locationChanged() {
-    console.log(LOCATION_CHANGED);
-    pubsub.asyncIterator([LOCATION_CHANGED])
+    return pubsub.asyncIterator([LOCATION_CHANGED])
 }
 
-function setNewLocation (_, args) {
-    pubsub.publish(LOCATION_CHANGED, { locationChanged: args });
-    return postController.addPost(args);
-}
-
-module.exports = {updateLocation, locationChanged, setNewLocation}
+module.exports = {updateLocation, locationChanged}
