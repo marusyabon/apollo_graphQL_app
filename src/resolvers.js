@@ -4,6 +4,7 @@ const {updateLocation, locationChanged} = require('./mutations/location');
 const User = require('../models/users');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const {AuthenticationError} = require('apollo-server');
 
 module.exports = {
 	Subscription: {
@@ -17,17 +18,13 @@ module.exports = {
 			const user = await User.findOne({email: email});
 			
 			if(!user) {
-				const error = new Error('User not found');
-				error.code = 401;
-				throw error;
+				throw new AuthenticationError('User not found');
 			}
 			
 			const isEqual = await bcrypt.compare(password, user.password);
 			
 			if(!isEqual) {
-				const error = new Error('Password is incorrect');
-				error.code = 401;
-				throw error;
+				throw new AuthenticationError('Password is incorrect');
 			}
 
 			const token = jwt.sign({
