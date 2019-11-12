@@ -24,7 +24,7 @@ async function updateCar (_, args, req) {
             new: true
         }
     )
-    console.log(updatedCar)
+
     return { ...updatedCar._doc, _id: createdCar._id.toString() };
 }
 

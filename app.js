@@ -3,20 +3,37 @@ const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./src/schema');
 const resolvers = require('./src/resolvers');
 const PORT = 8080;
+const HEADER_NAME = 'authorization';
+const jwt = require('jsonwebtoken');
 
 const server = new ApolloServer({
 	typeDefs, 
 	resolvers,
-	// context: ({ req }) => {
-	// 	// get the user token from the headers
-	// 	const token = req.headers.authorization || '';
+	context: async ({ req }) => {
+		let token;
+		let user = {};
+		let decodedToken;
+		
+		 try {
+			token = req.headers[HEADER_NAME];
+		} catch (e) {
+			console.warn(`Unable to authenticate using auth token: ${token}`);
+		}
 
-	// 	// try to retrieve a user with the token
-	// 	const user = getUser(token);
+		if (token) {
+			decodedToken = jwt.verify(token, 'somekey@123');
 
-	// 	// add the user to the context
-	// 	return { user };
-	// },
+			if (decodedToken) {
+				user.userId = decodedToken.userId;
+				user.isAuth = true;
+
+				return user;
+			}
+		}
+		else {
+			return 'Forbidden'
+		}		
+	},
 });
 
 server.listen(PORT).then(({url}) => {

@@ -30,7 +30,7 @@ const typeDefs = gql`
 	}
 
 	type Query {
-		getCars: [Car]
+		getCars(userId: String!): [Car]
 		login(email: String!, password: String!): AuthData!
 	}
 

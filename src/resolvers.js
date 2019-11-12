@@ -5,6 +5,7 @@ const User = require('../models/users');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {AuthenticationError} = require('apollo-server');
+const Car = require('../models/cars');
 
 module.exports = {
 	Subscription: {
@@ -14,6 +15,11 @@ module.exports = {
 	},
 
 	Query: {
+		getCars: async function(_, {userId}) {
+			const result = await Car.find({ userId: userId})
+			return result;
+		},
+
 		login: async function(_, {email, password}) {
 			const user = await User.findOne({email: email});
 			
