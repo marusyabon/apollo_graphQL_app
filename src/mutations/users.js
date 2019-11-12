@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const ObjectID = require('mongodb').ObjectID;
 const User = require('../../models/users');
 
 async function createUser (_, args, req) {

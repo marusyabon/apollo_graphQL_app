@@ -24,8 +24,14 @@ const typeDefs = gql`
 		userId: String
 	}
 
+	type AuthData {
+		token: String!
+		userId: String!
+	}
+
 	type Query {
 		getCars: [Car]
+		login(email: String!, password: String!): AuthData!
 	}
 
 	input LocationInput {
