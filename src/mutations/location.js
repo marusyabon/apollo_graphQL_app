@@ -7,7 +7,7 @@ const DEFAULT_LOCATION_TYPE = 'point';
 
 async function updateLocation (_, args) {
     pubsub.publish(LOCATION_CHANGED, {locationChanged: args });
-console.log(args)
+
     const updatedCar = await Car.findOneAndUpdate(
         { _id: ObjectID(args._id) },
         { $set: { 
