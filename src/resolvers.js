@@ -4,7 +4,7 @@ const {updateLocation, locationChanged} = require('./mutations/location');
 const User = require('../models/users');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {AuthenticationError} = require('apollo-server');
+const {AuthenticationError, ForbiddenError} = require('apollo-server');
 const Car = require('../models/cars');
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
 	Query: {
 		getCars: async function(_, {userId}, currentUser) {
 			if (!currentUser.isAuth) {
-				return new Error(`Unauthenticated!`);
+				return new ForbiddenError(`Unauthenticated!`);
 			}
 			
 			const result = await Car.find({ userId: currentUser.userId});

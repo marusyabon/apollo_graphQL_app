@@ -1,14 +1,25 @@
 const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server');
-const typeDefs = require('./src/schema');
-const resolvers = require('./src/resolvers');
+const { GraphQLModule } = require('@graphql-modules/core');
+// const typeDefs = require('./src/schema');
+// const resolvers = require('./src/resolvers');
+const UserModule = require('./modules/user');
+const CarModule = require('./modules/car');
 const PORT = 8080;
 const HEADER_NAME = 'authorization';
 const jwt = require('jsonwebtoken');
 
+const appModule  = new GraphQLModule({
+	imports: [
+		UserModule,
+		CarModule,
+	],
+});
+
+const { schema } = appModule ;
+
 const server = new ApolloServer({
-	typeDefs, 
-	resolvers,
+	schema,
 	context: async ({ req }) => {
 		let token;
 		let currentUser = {};
@@ -34,6 +45,17 @@ const server = new ApolloServer({
 			return null;
 		}		
 	},
+	formatError: (err) => {
+		// Don't give the specific errors to the client.
+		if (err.message.startsWith("Database Error: ")) {
+		  return new Error('Internal server error');
+		}
+		
+		// Otherwise return the original error.  The error can also
+		// be manipulated in other ways, so long as it's returned.
+		return err;
+	},
+	graphiql: true,
 });
 
 server.listen(PORT).then(({url}) => {
