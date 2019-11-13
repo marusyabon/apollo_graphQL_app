@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../../models/users');
 
-async function createUser (_, args, req) {
+async function createUser (_, args, currentUser) {
     const existingUser = await User.findOne({ email: args.email });
     if (existingUser) {
         const error = new Error('User exists already!');

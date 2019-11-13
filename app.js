@@ -11,7 +11,7 @@ const server = new ApolloServer({
 	resolvers,
 	context: async ({ req }) => {
 		let token;
-		let user = {};
+		let currentUser = {};
 		let decodedToken;
 		
 		 try {
@@ -24,14 +24,14 @@ const server = new ApolloServer({
 			decodedToken = jwt.verify(token, 'somekey@123');
 
 			if (decodedToken) {
-				user.userId = decodedToken.userId;
-				user.isAuth = true;
+				currentUser.userId = decodedToken.userId;
+				currentUser.isAuth = true;
 
-				return user;
+				return currentUser;
 			}
 		}
 		else {
-			return 'Forbidden'
+			return null;
 		}		
 	},
 });

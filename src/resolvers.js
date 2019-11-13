@@ -15,8 +15,12 @@ module.exports = {
 	},
 
 	Query: {
-		getCars: async function(_, {userId}) {
-			const result = await Car.find({ userId: userId})
+		getCars: async function(_, {userId}, currentUser) {
+			if (!currentUser.isAuth) {
+				return new Error(`Unauthenticated!`);
+			}
+			
+			const result = await Car.find({ userId: currentUser.userId});
 			return result;
 		},
 
