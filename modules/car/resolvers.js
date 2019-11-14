@@ -14,6 +14,7 @@ const resolvers = {
     
     Query: {
 		getCars: async function(_, {userId}, __, {session}) {
+            console.log(session)
 			if (!session.isAuth) {
 				return new ForbiddenError(`Unauthenticated!`);
 			}

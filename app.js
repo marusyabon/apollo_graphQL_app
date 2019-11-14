@@ -3,22 +3,20 @@ const { ApolloServer } = require('apollo-server');
 const { GraphQLModule } = require('@graphql-modules/core');
 const UserModule = require('./modules/user');
 const CarModule = require('./modules/car');
-const AuthModule = require('./modules/auth');
+// const AuthModule = require('./modules/auth');
 const PORT = 8080;
 const { JWT_KEY } = require('./modules/auth/config');
-// const { gql } = require('apollo-server');
 const jwt = require('jsonwebtoken');
 const HEADER_NAME = 'authorization';
 
 const appModule  = new GraphQLModule({
 	imports: [
 		UserModule,
-		CarModule,
-		AuthModule
+		CarModule
 	],
 });
 
-const { typeDefs, resolvers } = appModule;
+const { typeDefs, resolvers, context } = appModule;
 
 const server = new ApolloServer({
 	typeDefs,

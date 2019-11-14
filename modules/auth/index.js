@@ -1,3 +1,7 @@
+/**
+This module are not bieng used for now
+*/
+
 const { GraphQLModule } = require('@graphql-modules/core');
 const HEADER_NAME = 'authorization';
 const { JWT_KEY } = require('../auth/config');
