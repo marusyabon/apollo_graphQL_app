@@ -15,7 +15,7 @@ const appModule  = new GraphQLModule({
 	],
 });
 
-const { typeDefs, resolvers, context } = appModule;
+const { typeDefs, resolvers } = appModule;
 
 const server = new ApolloServer({
 	typeDefs,
@@ -51,7 +51,8 @@ const server = new ApolloServer({
 		
 		// Otherwise return the original error.
 		return err;
-	}
+	},
+	useUnifiedTopology: true
 });
 
 server.listen(PORT).then(({url}) => {

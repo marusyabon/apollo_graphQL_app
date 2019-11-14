@@ -4,6 +4,7 @@ const {PubSub} = require('apollo-server');
 const pubsub = new PubSub();
 const LOCATION_CHANGED = 'LOCATION_CHANGED';
 const DEFAULT_LOCATION_TYPE = 'point';
+const ObjectID = require('mongodb').ObjectID;
 
 const resolvers = {
 	Subscription: {
@@ -53,7 +54,6 @@ const resolvers = {
 
 		updateLocation: async function (_, args) {
             pubsub.publish(LOCATION_CHANGED, {locationChanged: args });
-        
             const updatedCar = await Car.findOneAndUpdate(
                 { _id: ObjectID(args._id) },
                 { $set: { 

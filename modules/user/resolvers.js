@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {AuthenticationError} = require('apollo-server');
 const {JWT_KEY} = require('../auth/config');
+const ObjectID = require('mongodb').ObjectID;
 
 const resolvers = {
 	Query: {
@@ -24,7 +25,7 @@ const resolvers = {
 				email: user.email
 			}, 
 			JWT_KEY, 
-			{expiresIn: '1h'});
+			{expiresIn: '10h'});
 			
 			return {token: token, userId: user._id.toString()};
 		}
@@ -45,7 +46,21 @@ const resolvers = {
 			});
 			const createdUser = await user.save();
 			return { ...createdUser._doc, _id: createdUser._id.toString() };
-		}
+		},
+
+		updateUser: async function (_, args) {
+			const updatedUser = await User.findOneAndUpdate(
+				{ _id: ObjectID(args._id) },
+				{ $set: { 
+					name: args.name,
+					email: args.email
+                } }, 
+                {
+                    new: true
+                }
+			);
+			return { ...updatedUser._doc, _id: updatedUser._id.toString() };
+		},
 	}
 }
 
