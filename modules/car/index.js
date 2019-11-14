@@ -3,8 +3,9 @@ const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 
 const CarModule = new GraphQLModule({
-  typeDefs,
-  resolvers
+	name: 'car',
+	typeDefs,
+	resolvers
 });
 
 module.exports = CarModule;

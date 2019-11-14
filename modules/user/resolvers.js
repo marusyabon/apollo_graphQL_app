@@ -2,6 +2,7 @@ const User = require('../../models/users');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {AuthenticationError} = require('apollo-server');
+const {JWT_KEY} = require('../auth/config');
 
 const resolvers = {
 	Query: {
@@ -22,7 +23,7 @@ const resolvers = {
 				userId: user._id.toString(),
 				email: user.email
 			}, 
-			'somekey@123', 
+			JWT_KEY, 
 			{expiresIn: '1h'});
 			
 			return {token: token, userId: user._id.toString()};
@@ -30,7 +31,7 @@ const resolvers = {
 	},
 
 	Mutation: {
-		createUser: async function (_, args, currentUser) {
+		createUser: async function (_, args) {
 			const existingUser = await User.findOne({ email: args.email });
 			if (existingUser) {
 				const error = new Error('User exists already!');

@@ -1,27 +1,30 @@
 const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server');
 const { GraphQLModule } = require('@graphql-modules/core');
-// const typeDefs = require('./src/schema');
-// const resolvers = require('./src/resolvers');
 const UserModule = require('./modules/user');
 const CarModule = require('./modules/car');
+const AuthModule = require('./modules/auth');
 const PORT = 8080;
-const HEADER_NAME = 'authorization';
+const { JWT_KEY } = require('./modules/auth/config');
+// const { gql } = require('apollo-server');
 const jwt = require('jsonwebtoken');
+const HEADER_NAME = 'authorization';
 
 const appModule  = new GraphQLModule({
 	imports: [
 		UserModule,
 		CarModule,
+		AuthModule
 	],
 });
 
-const { schema } = appModule ;
+const { typeDefs, resolvers } = appModule;
 
 const server = new ApolloServer({
-	schema,
-	context: async ({ req }) => {
-		let token;
+	typeDefs,
+	resolvers,
+	context: ({ req }) => {
+        let token;
 		let currentUser = {};
 		let decodedToken;
 		
@@ -32,7 +35,7 @@ const server = new ApolloServer({
 		}
 
 		if (token) {
-			decodedToken = jwt.verify(token, 'somekey@123');
+			decodedToken = jwt.verify(token, JWT_KEY);
 
 			if (decodedToken) {
 				currentUser.userId = decodedToken.userId;
@@ -41,10 +44,8 @@ const server = new ApolloServer({
 				return currentUser;
 			}
 		}
-		else {
-			return null;
-		}		
-	},
+		return null;
+    },
 	formatError: (err) => {
 		// Don't give the specific errors to the client.
 		if (err.message.startsWith("Database Error: ")) {
@@ -54,8 +55,7 @@ const server = new ApolloServer({
 		// Otherwise return the original error.  The error can also
 		// be manipulated in other ways, so long as it's returned.
 		return err;
-	},
-	graphiql: true,
+	}
 });
 
 server.listen(PORT).then(({url}) => {

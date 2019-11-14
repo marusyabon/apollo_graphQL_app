@@ -13,18 +13,18 @@ const resolvers = {
     },
     
     Query: {
-		getCars: async function(_, {userId}, currentUser) {
-			if (!currentUser.isAuth) {
+		getCars: async function(_, {userId}, __, {session}) {
+			if (!session.isAuth) {
 				return new ForbiddenError(`Unauthenticated!`);
 			}
 			
-			const result = await Car.find({ userId: currentUser.userId});
+			const result = await Car.find({ userId: session.userId});
 			return result;
 		}
 	},
 
 	Mutation: {
-		createCar: async function (_, args, currentUser) {
+		createCar: async function (_, args, __, {session}) {
             const car = new Car({
                 model: args.model,
                 userId: ObjectID(currentUser.userId)
@@ -33,7 +33,7 @@ const resolvers = {
             return { ...createdCar._doc, _id: createdCar._id.toString() };
         },
 
-		updateCar: async function (_, args, currentUser) {
+		updateCar: async function (_, args, __, {session}) {
             const updatedCar = await Car.findOneAndUpdate(
                 { _id: ObjectID(args._id) },
                 { $set: { 
