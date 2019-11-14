@@ -3,10 +3,9 @@ const { ApolloServer } = require('apollo-server');
 const { GraphQLModule } = require('@graphql-modules/core');
 const UserModule = require('./modules/user');
 const CarModule = require('./modules/car');
-// const AuthModule = require('./modules/auth');
-const PORT = 8080;
-const { JWT_KEY } = require('./modules/auth/config');
 const jwt = require('jsonwebtoken');
+const { JWT_KEY } = require('./modules/auth/config');
+const PORT = 8080;
 const HEADER_NAME = 'authorization';
 
 const appModule  = new GraphQLModule({
@@ -45,13 +44,12 @@ const server = new ApolloServer({
 		return null;
     },
 	formatError: (err) => {
-		// Don't give the specific errors to the client.
+		// Don't give the specific DB errors to the client.
 		if (err.message.startsWith("Database Error: ")) {
 		  return new Error('Internal server error');
 		}
 		
-		// Otherwise return the original error.  The error can also
-		// be manipulated in other ways, so long as it's returned.
+		// Otherwise return the original error.
 		return err;
 	}
 });
