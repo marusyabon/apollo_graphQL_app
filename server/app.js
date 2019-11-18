@@ -60,7 +60,7 @@ server.listen(PORT).then(({url}) => {
 });
 
 mongoose.connect(
-	'mongodb://localhost:27017/graphQL_app', 
+	'mongodb://mongo:27017', 
 	{ 
 		useNewUrlParser: true,
 		useFindAndModify: false,
